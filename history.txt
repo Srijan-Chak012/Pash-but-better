@@ -1,19 +1,19 @@
-cat < 1.txt
-echo 1 > 1.txt
+cat < 1.txt | wc > out.txt
+cat out.txt | head -2 | tail -1
+cat 1.txt | wc
+ls | grep *.txt > out.txt
+jobs
+bg 1
 firefox
-jobs -s
+jobs
+bg 1
+firefox
 jobs -r
+jobs
 sleep 10 &
+firefox
 cd ..
-firefox
 sleep 10 &
-jobs
-jobs -r
-firefox
-bg 1
-jobs
-firefox
-bg 1
-jobs
-cat < 1.txt
+cat < 1.txt | wc > out.txt
+cat < 1.txt | wc > oo.txt
 exit
