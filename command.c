@@ -1,0 +1,192 @@
+#include "headers.h"
+#define ll long long int 
+
+void call_command(char *cmd, bool append_to_hist) {
+    if (cmd == NULL) return;
+    int nCmds = 1;
+    char *curr_cmd = strdup(cmd);
+    char **store_cmd = (char**)calloc(nCmds, sizeof(char*));
+    cmd = strtok(cmd, ";");
+    if (cmd == NULL) return;
+    if (append_to_hist) {
+        append_history(curr_cmd);
+        for (char *ptr = cmd; *ptr; ++ptr) 
+            if (*ptr == ';') 
+                ++nCmds;
+    }
+    sFree(curr_cmd);
+    int z = 0;
+    while (cmd != NULL) {
+        store_cmd[z] = strdup(cmd); ++z;
+        cmd = strtok(NULL, ";");
+    }
+    for (int i = 0; i < z; ++i) {
+        if (!isPipeOrRedirect(store_cmd[i])) {
+            execute(store_cmd[i]);
+        }
+        sFree(store_cmd[i]);
+    }
+    sFree(store_cmd);
+}
+
+
+void execute(char *cmd) {
+    char *token = strtok(cmd, delim);
+    if (token == NULL) {
+        return;
+    }
+        if (strncmp("exit", token, strlen(token)) == 0 || strncmp("quit", token, strlen(token)) == 0) {
+            exit(0);
+        }else if (strncmp("echo", token, strlen(token)) == 0) {
+            call_echo(token);
+        } else if (strncmp("pwd", token, strlen(token)) == 0) {
+            present_working_directory();
+        } else if (strncmp("cd", token, strlen(token)) == 0) {
+            call_CD(token);
+        } else if (strncmp("ls", token, strlen(token)) == 0) {
+            char *instruction = token;
+            ll num = 0;
+            char **args = (char **)malloc(100 * sizeof(char *));
+            while (instruction != NULL) {
+                args[num] = instruction;
+                ++num;
+                instruction = strtok(NULL, delim);
+            }
+            ls(args, num);
+        } else if (strncmp("history", token, strlen(token)) == 0) {
+            token = strtok(NULL, delim);
+            ll argc = 0, a = 0;
+            while (token != NULL) {
+                argc++;
+                ll  m = 1, digs = strlen(token);
+                // for (int i = digs - 1; i >= 0; --i) {
+                //     if (i == 0 && token[0] == '-') {
+                //         a = -a;
+                //     } else {
+                //         a += m * (token[i] - '0');
+                //         m *= 10;
+                //     }
+                // }   
+                a = atoi(token);
+                token = strtok(NULL, delim);
+            }
+            char *cmd = "history";
+            if (argc > 1) {
+                printf("%s: too many arguments\n", cmd);
+            } else {
+                if (argc == 0) 
+                    history(-1);
+                else {
+                    if (a >= 0) {
+                        history(a);
+                    } else {
+                        printf("%s: invalid arguments\n", cmd);
+                    }
+                }
+            }
+        } 
+        else if (strncmp("pinfo", token, strlen(token)) == 0)
+        {
+            char *num;
+            num = strtok(NULL, delim);
+            // printf("%s %s\n", instruction, num);
+            pinfo(token, num);
+        }
+        else if(strncmp("discover", token, strlen(token)) == 0)
+        {
+
+            char *instruction = token;
+            ll num = 0;
+            char **args = (char **)malloc(100 * sizeof(char *));
+            while (instruction != NULL) {
+                args[num] = instruction;
+                ++num;
+                instruction = strtok(NULL, delim);
+            }
+            discover(args, num);
+        } else if (strcmp("jobs", token) == 0) {
+        bool procStopped = false, procRunning = false, valid  = true; 
+        while (token != NULL) {
+            if (token[0] == '-') {
+                for (int i = 1; token[i] != '\0'; ++i) {
+                    if (token[i] == 'r') {
+                        procRunning = true;
+                    } else if (token[i] == 's') {
+                        procStopped = true;
+                    } else {
+                        valid = false;
+                        printf("Pash: jobs: %c: invalid option\n", token[i]); 
+                        break;
+                    }
+                }
+            }
+            token = strtok(NULL, delim);
+        }
+        if (valid) {
+            jobs(procRunning, procStopped);
+        }
+    } else if (strcmp("sig", token) == 0) {
+        token = strtok(NULL, delim);
+        if (token == NULL) {
+            printf("sig: Usage: sig [job number] [signal number]\n");
+            return;
+        }
+        int jobNumber = atoi(token);
+        token = strtok(NULL, delim);
+        if (token == NULL) {
+            printf("sig: Usage: sig [job number] [signal number]\n");
+            return;
+        }
+        int sigNumber = atoi(token);
+        token = strtok(NULL, token);
+        if (token != NULL) {
+            printf("Pash: sig: too many arguments\n");
+        } else {
+            sig_sendSignal(jobNumber, sigNumber);
+        }
+    } else if (strcmp("fg", token) == 0) {
+        token = strtok(NULL, delim);
+        int jNo = 0, args = 0;
+        while (token != NULL) {
+            args++;
+            jNo = atoi(token);
+            token = strtok(NULL, delim);
+        }
+        if (args >= 1) {
+            if (args > 1) {
+                printf("Pash: fg: too many arguments\n");
+                return;
+            } else if (jNo <= 0) {
+                printf("Pash: fg: invalid job number\n");
+                return;
+            } else {
+                _foreground(jNo);
+            }
+        } else {
+            _foreground(0);
+        }
+    } else if (strcmp("bg", token) == 0) {
+        token = strtok(NULL, delim);
+        int jNo = 0, args = 0;
+        while (token != NULL) {
+            args++;
+            jNo = atoi(token);
+            token = strtok(NULL, delim);
+        }
+        if (args >= 1) {
+            if (args > 1) {
+                printf("Pash: bg: too many arguments\n");
+                return;
+            } else if (jNo <= 0) {
+                printf("Pash: bg: invalid job number\n");
+                return;
+            } else {
+                _background(jNo);
+            }
+        } else {
+            _background(0);
+        }
+    } else {
+        fgbg(token);
+    }
+}

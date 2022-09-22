@@ -1,0 +1,19 @@
+cat < 1.txt
+echo 1 > 1.txt
+firefox
+jobs -s
+jobs -r
+sleep 10 &
+cd ..
+firefox
+sleep 10 &
+jobs
+jobs -r
+firefox
+bg 1
+jobs
+firefox
+bg 1
+jobs
+cat < 1.txt
+exit
