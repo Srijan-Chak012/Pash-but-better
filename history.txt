@@ -1,19 +1,19 @@
-sleep 5 &
-sleep 10 &
-firefox
-sleep 10 &
-firefox 
 firefox
 sleep 10 &
 sleep 5 &
 jobs
 jobs -r
-jobs -s
-jobs -r
+firefox
+sleep 10 &
 jobs
-ls -l
-ls -la
-pwd
-clear
-history
+firefox
+jobs
+bg 1
+jobs
+fg 1
+sleep 10 &
+sig 1 9
+sleep 10 &
+sleep 5 &
+sig 1 9
 exit
