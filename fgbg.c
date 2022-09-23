@@ -2,19 +2,19 @@
 
 int argc, bg_no;
 char *argv[265];
-bool background;
+int background;
 
 void get_args(char *token) {
     argc = 0;
-    background = false;
+    background = 0;
     while (token != NULL) {
         argv[argc] = token;
         token = strtok(NULL, delim);
-        argc++;
+        ++argc;
     }
     argv[argc] = NULL;
-    if (strcmp(argv[argc - 1], "&") == 0) {
-        background = true;
+    if (strncmp(argv[argc - 1], "&", strlen(argv[argc - 1])) == 0) {
+        background = 1;
         argv[argc - 1] = NULL;
         argc--;
     }
@@ -64,19 +64,19 @@ void fgbg(char * tkn) {
 
 void _foreground(int jobNo) {
     checkJobs();
-    bool jobNoSpecified = true;
+    int jobNoSpecified = 1;
     if (jobNo == 0) {
-        jobNoSpecified = false;
+        jobNoSpecified = 0;
         for (process* curr = process_ptr; curr != NULL; curr = curr->next) {
             jobNo = max(jobNo, curr->JobNo);
         }
     }
     pid_t childProcessPID = -1;
-    bool validJob = false;
+    int validJob = 0;
     char *name;
     for (process* curr = process_ptr; curr != NULL; curr = curr->next) {
         if (curr->JobNo == jobNo) {
-            validJob = true;
+            validJob = 1;
             childProcessPID = curr->pid; 
             name = curr->name;
             break;
@@ -116,18 +116,18 @@ void _foreground(int jobNo) {
 
 void _background(int jobNo) {
     checkJobs();
-    bool jobNoSpecified = true;
+    int jobNoSpecified = 1;
     if (jobNo == 0) {
-        jobNoSpecified = false;
+        jobNoSpecified = 0;
         for (process* curr = process_ptr; curr != NULL; curr = curr->next) {
             jobNo = max(jobNo, curr->JobNo);
         }
     }
     pid_t childProcessPID = -1;
-    bool validJob = false;
+    int validJob = 0;
     for (process* curr = process_ptr; curr != NULL; curr = curr->next) {
         if (curr->JobNo == jobNo) {
-            validJob = true;
+            validJob = 1;
             childProcessPID = curr->pid; break;
         }
     } 

@@ -2,6 +2,8 @@
 
 #define ll long long int
 
+char *error = "No such file or directory";
+
 char *getFileName(int start, int *end, char *cmd)
 {
     if (start < 0)
@@ -79,10 +81,10 @@ int isPipeOrRedirect(char *cmd)
         if (inputFile != NULL)
         {
             FDin = open(inputFile, O_RDONLY);
-            if (FDin < 0)
+            if (FDin < 1 && FDin != 0)
             {
                 char msg[1500] = {};
-                sprintf(msg, "Pash: %s: No such file or directory", inputFile);
+                sprintf(msg, "Pash: %s: %s", inputFile, error);
                 perror(msg);
                 close(FDout);
                 dup2(STD_INP_FD, STDIN_FILENO);
@@ -95,13 +97,13 @@ int isPipeOrRedirect(char *cmd)
             FDin = dup(STD_INP_FD);
         }
         cmd = strtok(cmd, "><");
-        dup2(FDout, STDOUT_FILENO);
         dup2(FDin, STDIN_FILENO);
+        dup2(FDout, STDOUT_FILENO);
         close(FDout);
         close(FDin);
         execute(cmd);
-        dup2(STD_INP_FD, STDIN_FILENO);
         dup2(STD_OUT_FD, STDOUT_FILENO);
+        dup2(STD_INP_FD, STDIN_FILENO);
         return 1;
     }
     char *tkn = strtok(cmd, "|");
@@ -131,13 +133,13 @@ int isPipeOrRedirect(char *cmd)
 
         dup2(FDin, STDIN_FILENO);
         close(FDin);
-        if (LESS)
+        if (LESS != 0)
         {
             FDin = open(inputFile, O_RDONLY);
-            if (FDin < 0)
+            if (FDin < 1 && FDin != 0)
             {
                 char msg[1500];
-                sprintf(msg, "Pash: %s: No such file or directory", inputFile);
+                sprintf(msg, "Pash: %s: %s", inputFile, error);
                 perror(msg);
             }
             else
@@ -148,7 +150,7 @@ int isPipeOrRedirect(char *cmd)
         }
         if (!tkn)
         {
-            if (outputFile && GREAT)
+            if (outputFile != 0 && GREAT != 0)
             {
                 FDout = open(outputFile, O_WRONLY | O_CREAT | (append ? O_APPEND : O_TRUNC), 0644);
             }
@@ -172,10 +174,10 @@ int isPipeOrRedirect(char *cmd)
         {
             perror("Pash: fork done goofed");
         }
-        else if (pid == 0)
+        else if (pid < 1 && pid > -1)
         {
             execute(curr_cmd);
-            _exit(EXIT_SUCCESS);
+            _exit(0);
         }
         waitpid(pid, NULL, WUNTRACED);
         dup2(STD_INP_FD, STDIN_FILENO);
