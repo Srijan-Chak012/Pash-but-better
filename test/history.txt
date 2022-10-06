@@ -1,0 +1,19 @@
+jobs
+sleep 10
+fg 1
+jobs
+bg 1
+jobs
+firefox
+jobs
+firefox
+jobs
+sleep 10 &
+firefox
+jobs -r
+jobs
+sleep 5 &
+ls -la ; cd ..
+ls -l ; cd test
+cd test
+cd ..

@@ -45,26 +45,28 @@ make
 
 ### pwd
 
-- Prints the present working directory `pwd`.  
+- Prints the present working directory `pwd`.
 
-### History
+### pinfo
+
+- Displays the process information.
+    - Process ID
+    - Process Status
+    - Virtual memory
+    - executable path.
+- If the PID is not mentioned it will show the information about the shell process.
+
+### history
 
 - Displays the last used commands with most recent ones appearing at the bottom of the list.
 - stores uptill 20 history commands.
 
-### Repeat   
+### discover
 
-- ```bash 
-  repeat <number> [command]
-  ```  
-  This repeatedly executes the [command] for any number of times as specified. 
-- `repeat` itself can be used a [command] in the argument for another `repeat`.  
-  For example, 
-  ```bash
-  repeat 2 repeat 5 echo hello  
-  ```
-  This will print hello for 5 times which will then repeat the whole process for 2 times. That is, in total, the command `echo hello` will be called for 2 * 5 = 10 times.  
-  
+- Displays the contents of the directories according to the flag provided
+- `-f` to display the files in the directory
+- `-d` to display the directories in the directory
+- `-d -f` to display the files and directories in the directory
 
 ### Input and Output redirection
 

@@ -48,12 +48,12 @@ int main()
 
 	while (true)
 	{
-		if (!prompt_done)
+		if (prompt_done == false)
 			prompt();
 		prompt_done = false;
 		buff = NULL;
 		cmd_len = getline(&buff, &buff_len, stdin);
-		if ((cmd_len == -1 || strlen(buff) == 0) && feof(stdin))
+		if ((cmd_len < 0 || strlen(buff) == 0) && feof(stdin))
 		{
 			puts("");
 			if (errno == EINTR)
@@ -63,10 +63,10 @@ int main()
 			sFree(buff);
 			return 0;
 		}
-		if (cmd_len == -1)
+		if (cmd_len < 0)
 		{
 			perror("");
-			exit(EXIT_FAILURE);
+			exit(0);
 		}
 		call_command(buff, true);
 		sFree(buff);

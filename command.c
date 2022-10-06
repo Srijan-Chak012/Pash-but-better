@@ -1,38 +1,59 @@
 #include "headers.h"
 #define ll long long int
 
+char *err = "too many arguments ";
 void call_command(char *cmd, bool append_to_hist)
 {
-    if (cmd == NULL)
+    if (!cmd)
         return;
-    int nCmds = 1;
+    ll nCmds = 1;
     char *curr_cmd = strdup(cmd);
     char **store_cmd = (char **)calloc(nCmds, sizeof(char *));
     cmd = strtok(cmd, ";");
-    if (cmd == NULL)
+    if (!cmd)
         return;
     if (append_to_hist)
     {
         append_history(curr_cmd);
-        for (char *ptr = cmd; *ptr; ++ptr)
+        // printf("curr_cmd = %s\n", curr_cmd);
+        // for (char *ptr = cmd; *ptr; ++ptr)
+        //     if (*ptr == ';')
+        //         ++nCmds;
+        char *ptr = cmd;
+        while (*ptr)
+        {
             if (*ptr == ';')
                 ++nCmds;
+            ptr++;
+        }
+        // printf("nCmds = %d\n", nCmds);
     }
+    // printf("nCmds = %d\n", nCmds);
     sFree(curr_cmd);
     int z = 0;
     while (cmd != NULL)
     {
         store_cmd[z] = strdup(cmd);
-        ++z;
+        z++;
         cmd = strtok(NULL, ";");
     }
-    for (int i = 0; i < z; ++i)
+    // for (int i = 0; i < z; ++i)
+    // {
+    //     if (!isPipeOrRedirect(store_cmd[i]))
+    //     {
+    //         execute(store_cmd[i]);
+    //     }
+    //     sFree(store_cmd[i]);
+    // }
+    ll i = 0;
+    while (i < z)
     {
         if (!isPipeOrRedirect(store_cmd[i]))
         {
             execute(store_cmd[i]);
         }
         sFree(store_cmd[i]);
+        i++;
     }
     sFree(store_cmd);
 }
@@ -143,7 +164,7 @@ void execute(char *cmd)
             if (token[0] == '-')
             {
                 // for (int i = 1; token[i] != '\0'; ++i)
-                int i = 0;
+                int i = 1;
                 while(token[i] != '\0')
                 {
                     if (token[i] == 's' && token[i] != 'r')
@@ -200,21 +221,22 @@ void execute(char *cmd)
     else if (strncmp("fg", token, strlen(token)) == 0)
     {
         token = strtok(NULL, delim);
-        int jNo = 0, args = 0;
+        ll jNo = 0, args = 0, counter = 0;
         while (token != NULL)
         {
-            args++;
+            ++args;
             jNo = atoi(token);
             token = strtok(NULL, delim);
+            counter++;
         }
-        if (args >= 1)
+        if (args > 0)
         {
-            if (args > 1)
+            if (args >= 2)
             {
-                printf("Pash: fg: too many arguments\n");
+                printf("Pash: fg: %s\n", err);
                 return;
             }
-            else if (jNo <= 0)
+            else if (jNo < 0 && jNo != 0)
             {
                 printf("Pash: fg: invalid job number\n");
                 return;
@@ -232,21 +254,21 @@ void execute(char *cmd)
     else if (strncmp("bg", token, strlen(token)) == 0)
     {
         token = strtok(NULL, delim);
-        int jNo = 0, args = 0;
+        ll jNo = 0, args = 0;
         while (token != NULL)
         {
-            args++;
+            ++args;
             jNo = atoi(token);
             token = strtok(NULL, delim);
         }
-        if (args >= 1)
+        if (args > 0)
         {
-            if (args > 1)
+            if (args >= 2)
             {
-                printf("Pash: bg: too many arguments\n");
+                printf("Pash: bg: %s\n", err);
                 return;
             }
-            else if (jNo <= 0)
+            else if (jNo < 0 && jNo != 0)
             {
                 printf("Pash: bg: invalid job number\n");
                 return;

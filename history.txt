@@ -1,19 +1,19 @@
+bg
+fg
+jobs -s
+jobs -r
+jobs
+sig 1 9
+jobs
+sleep 10 
+sleep 10 &
+jobs
+echo 1
 firefox
+jobs
 sleep 10 &
 sleep 5 &
 jobs
 jobs -r
-firefox
-sleep 10 &
-jobs
-firefox
-jobs
+sleep 5
 bg 1
-jobs
-fg 1
-sleep 10 &
-sig 1 9
-sleep 10 &
-sleep 5 &
-sig 1 9
-exit
