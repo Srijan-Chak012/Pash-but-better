@@ -1,19 +1,19 @@
-bg
-fg
-jobs -s
-jobs -r
-jobs
 sig 1 9
 jobs
-sleep 10 
-sleep 10 &
-jobs
-echo 1
-firefox
-jobs
-sleep 10 &
-sleep 5 &
-jobs
 jobs -r
-sleep 5
-bg 1
+jobs -s
+fg
+ls -a
+cd ..
+cd eample
+cd example
+ls -a
+cd ~
+history
+discover
+pinfo
+echo 1
+pwd
+ls -a
+ls -l
+history

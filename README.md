@@ -1,11 +1,15 @@
 # Shell - *Pash*
 
+![Pash home](images/1.png)
+
 ## Usage
 
 ```bash
 make
 ./Pash
 ```
+
+![Command line](images/2.png)
 
 ## Assumptions
 
@@ -32,6 +36,7 @@ make
 
 - Lists the contents of the given directory, multiple directories and folders.  
 - If arguments has files as well as folders, files are displayed first in sorted order followed by the contents of folders in sorted order of names.  
+- The contents are also colour coded as in a regular shell; red for directories, yellow for executables and blue for other files.
 - Add `-l` to display the details of each file and folder,`-a` to display the hidden files and folders, `-la` or `-al` for both features.   
 - The directories, files and flags can be mentioned in any order after `ls`.  
 
@@ -60,6 +65,8 @@ make
 
 - Displays the last used commands with most recent ones appearing at the bottom of the list.
 - stores uptill 20 history commands.
+
+![history](images/4.png)
 
 ### discover
 
