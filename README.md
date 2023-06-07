@@ -1,4 +1,4 @@
-# Shell - *Pash*
+# Pash - The Panda Shell
 
 ![Pash home](images/1.png)
 
